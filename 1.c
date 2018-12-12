@@ -133,7 +133,7 @@ void set_env(){
 int main(int argc, char *argv[])
 {
     while (1){
-        int opt = getopt(argc, argv, "ispuU:cC:dvV:qw");
+        int opt = getopt(argc, argv, "ispuU:cC:dvV:");
         if (opt == -1){
             break;
         }
@@ -168,8 +168,6 @@ int main(int argc, char *argv[])
         case 'V':
             set_env();
             break;
-        case 'q': abort(); break;
-        case 'w': while(1){} break;
         default:
             return EXIT_FAILURE;
         }
