@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
         perror(NULL);
         return 1;
     }
-    some_string[0] = 'Z';
+    //some_string[0] = 'Z';
 
     printf("Parent: %s\n", some_string);
 /*
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
             path = argv[1];
         }
         char* argv1[] = {"cat", path, NULL};
-
+//dont delete!
 //        if(execvp("cat", argv1) == -1)
 //        {
 //            perror("Child: in process (error)");
