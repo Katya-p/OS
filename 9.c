@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 //    intptr_t sz2 = getpagesize();
     long sz = sysconf(_SC_PAGESIZE);
     char* aligned = (char*)(((intptr_t) some_string) / sz * sz);
-    if (mprotect(aligned, 1, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+    if (mprotect(aligned, 1, PROT_READ | PROT_WRITE | PROT_EXEC) == -1)
     {
         perror(NULL);
         return 1;
