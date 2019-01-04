@@ -4,11 +4,12 @@
 #include <dirent.h>
 #include <string.h>
 #include <fnmatch.h>
+#include <ftw.h>
 
-char* fix_pattern(char* pattern){
+char* fix_pattern(const char* pattern){
     char* result = malloc(strlen(pattern) * 2 + 1);
     char* j = result;
-    for (char* i = pattern; *i != '\0'; i++){
+    for (const char* i = pattern; *i != '\0'; i++){
         char c = *i;
         if (c == '['){
             *j++ = '\\';
@@ -18,10 +19,6 @@ char* fix_pattern(char* pattern){
             *j++ = '\\';
             *j++ = '\\';
         }
-        else if (c == '/'){
-            fprintf(stderr, "invalid pattern");
-            exit(EXIT_FAILURE);
-        }
         else {
             *j++ = c;
         }
@@ -30,9 +27,9 @@ char* fix_pattern(char* pattern){
     return result;
 }
 
-int matches(char* pattern, char* s){
+int matches(const char* pattern, const char* s){
     char* fixed = fix_pattern(pattern);
-    int result = fnmatch(fixed, s, 0);
+    int result = fnmatch(fixed, s, FNM_PATHNAME);
     free(fixed);
     if (result == 0){
         return 0;
@@ -44,27 +41,28 @@ int matches(char* pattern, char* s){
     exit(EXIT_FAILURE);
 }
 
+static char* global_pattern;
+static int dir_path_length;
+
+int process(const char *file, const struct stat *sb, int flag){
+    const char* path = file + dir_path_length + 1;
+    if (*path == 0){
+        return 0;
+    }
+    if (matches(global_pattern, path) == 0){
+        printf("%s\n", path);
+    }
+    //printf("%s %d %d\n", path, flag, s->base);
+    return 0;
+}
+
 void print_dir(char* dir_path, char* pattern){
-    DIR* dir = opendir(dir_path);
-    if (dir == NULL){
+    global_pattern = pattern;
+    dir_path_length = (int)strlen(dir_path);
+    if (ftw(dir_path, process, 20) == -1){
         perror("print_dir");
         exit(EXIT_FAILURE);
     }
-    errno = 0;
-    while (1){
-        struct dirent *entry = readdir(dir);
-        if (entry == NULL){
-            if (errno != 0){
-                perror("print_dir");
-                exit(EXIT_FAILURE);
-            }
-            break;
-        }
-        if (matches(pattern, entry->d_name) == 0){
-            printf("%s\n", entry->d_name);
-        }
-    }
-    closedir(dir);
 }
 
 int main(int argc, char* argv[]){
