@@ -48,7 +48,7 @@ File modification time (use ctime(3C)).
 File name (if the name was given with the path, print only the name).
 
 19.     File name templates
- Write a program that invites the user to enter a file name pattern similar to the one used in shell. The template syntax is:
+Write a program that invites the user to enter a file name pattern similar to the one used in shell. The template syntax is:
 * matches a sequence of any characters except / of any length; possibly an empty sequence.
 ? matches any single character.
 / cannot meet.
