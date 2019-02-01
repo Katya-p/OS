@@ -1,5 +1,5 @@
 # OS
-Tasks for course "Unix SVR4 System Calls and Libraries"
+Tasks for course "Unix SVR4 System Calls and Libraries".
 Solaris operating system is used.
 
 
